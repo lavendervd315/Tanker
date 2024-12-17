@@ -3,7 +3,8 @@
 public class BulletScript : MonoBehaviour
 {
 
-    public float damage = 10f; // Sát thương của viên đạn
+    public int damage = 10; // Sát thương của viên đạn
+    public GameObject hitEffect; // Prefab của hiệu ứng va chạm
 
     void Start()
     {
@@ -24,15 +25,14 @@ public class BulletScript : MonoBehaviour
                 bot.TakeDamage(damage);
             }
 
-            // Hủy viên đạn sau khi chạm
-            Destroy(gameObject);
-        }
+            // Hiển thị hiệu ứng va chạm
+            if (hitEffect != null)
+            {
+                // Tạo hiệu ứng tại vị trí va chạm
+                Instantiate(hitEffect, transform.position, Quaternion.identity);
+            }
 
-        // Kiểm tra nếu viên đạn chạm vào tường
-        if (other.CompareTag("Wall"))
-        {
-            Debug.Log("Bullet hit Wall!");
-            // Hủy viên đạn khi chạm vào tường
+            // Hủy viên đạn sau khi chạm
             Destroy(gameObject);
         }
     }

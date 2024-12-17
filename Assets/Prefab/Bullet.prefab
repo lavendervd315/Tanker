@@ -29,8 +29,8 @@ Transform:
   m_GameObject: {fileID: 605740701766460422}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.26, y: -1.82, z: 0}
-  m_LocalScale: {x: 0.3851797, y: 0.43101987, z: 1}
+  m_LocalPosition: {x: -0.1481, y: -1.7454, z: 0}
+  m_LocalScale: {x: 0.47257698, y: 0.48929378, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -103,6 +103,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 10
+  hitEffect: {fileID: 100004, guid: 10a7ec2a2783770419a38059c45ea8b3, type: 3}
 --- !u!50 &6532187129369141861
 Rigidbody2D:
   serializedVersion: 5
