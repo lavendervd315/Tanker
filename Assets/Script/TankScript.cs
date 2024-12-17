@@ -1,12 +1,17 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class TankScript : MonoBehaviour
 {
     public GameObject tanker; // Tank
     public GameObject bulletPrefab; // Prefab của viên đạn
     public Transform firePoint; // Điểm xuất phát của viên đạn
-    public float bulletSpeed = 10f; // Tốc độ của viên đạn
+    public float bulletSpeed = 100f; // Tốc độ của viên đạn
     public float moveSpeed = 10f; // Tốc độ di chuyển của tank
+    public float maxHealth = 100f; // Máu tối đa
+    public Slider healthBar; // Tham chiếu đến thanh máu (Slider)
+
+    private float currentHealth;
 
     private Rigidbody2D rb; // Rigidbody2D của tank
     private Vector2 movement; // Vector lưu hướng di chuyển
@@ -44,7 +49,7 @@ public class TankScript : MonoBehaviour
 
 
         // Bắn đạn khi nhấn phím Chuột trái
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             Shoot();
         }
@@ -64,5 +69,28 @@ public class TankScript : MonoBehaviour
         // Lấy Rigidbody2D của viên đạn và thêm lực để nó di chuyển
         Rigidbody2D rbBullet = bullet.GetComponent<Rigidbody2D>();
         rbBullet.linearVelocity = firePoint.up * bulletSpeed;
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+
+        // Đảm bảo máu không dưới 0
+        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+
+        UpdateHealthBar();
+
+        if (currentHealth <= 0)
+        {
+            Debug.Log("Tank destroyed!");
+        }
+    }
+
+    void UpdateHealthBar()
+    {
+        if (healthBar != null)
+        {
+            healthBar.value = currentHealth / maxHealth; // Giá trị từ 0 đến 1
+        }
     }
 }

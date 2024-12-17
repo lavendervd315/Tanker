@@ -40,7 +40,7 @@ public class BotScript : MonoBehaviour
         movement = directionToPlayer;
 
         // Kiểm tra và bắn nếu trong tầm tấn công
-        if (distanceToPlayer <= attackRange && Time.time - lastShootTime >= shootCooldown)
+        if (Time.time - lastShootTime >= shootCooldown)
         {
             Shoot();
             lastShootTime = Time.time;

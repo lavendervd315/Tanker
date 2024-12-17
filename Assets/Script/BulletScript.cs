@@ -32,8 +32,20 @@ public class BulletScript : MonoBehaviour
                 Instantiate(hitEffect, transform.position, Quaternion.identity);
             }
 
-            // Hủy viên đạn sau khi chạm
-            Destroy(gameObject);
+            
         }
+
+        if (other.CompareTag("Tanker"))
+        {
+            Debug.Log("Bullet hit Tank!");
+            TankScript tank = other.GetComponent<TankScript>();
+            if (tank != null)
+            {
+                tank.TakeDamage(damage);
+            }
+        }
+
+        // Hủy viên đạn sau khi chạm
+        Destroy(gameObject);
     }
 }
