@@ -1,0 +1,46 @@
+# Unity generated folders
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Ll]ogs/
+/[Mm]emoryCaptures/
+
+# Visual Studio / Rider generated folders
+/[Aa]ssets/**/*.csproj
+/[Aa]ssets/**/*.unityproj
+/[Aa]ssets/**/*.sln
+/.vs/
+/.vscode/
+/.idea/
+/*.userprefs
+/*.suo
+/*.csproj
+/*.pidb
+/*.booproj
+/*.svd
+
+# Auto-generated files by Unity
+/[Pp]rojectSettings/
+/[Uu]ser[Ss]ettings/
+
+# Cache and build artifacts
+/*.apk
+/*.unitypackage
+/*.log
+/*.tmp
+.DS_Store
+
+# OS-specific files
+*.swp
+*.lock
+*.pyc
+*.pyo
+*.class
+
+# Unity Cloud Build
+/[Cc]ache/
+[Uu]pload/
+
+# Ignore crash reports
+/crashReports/
