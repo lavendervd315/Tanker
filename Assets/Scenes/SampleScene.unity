@@ -480,7 +480,7 @@ MonoBehaviour:
   bulletSpeed: 30
   moveSpeed: 10
   maxHealth: 100
-  healthBar: {fileID: 0}
+  healthBar: {fileID: 343684653}
 --- !u!1 &330379757
 GameObject:
   m_ObjectHideFlags: 0
@@ -604,7 +604,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -2, y: -215}
   m_SizeDelta: {x: 160, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &343684653
