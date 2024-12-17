@@ -3,7 +3,7 @@
 public class BulletScript : MonoBehaviour
 {
 
-    public int damage = 10; // Sát thương của viên đạn
+    public float damage = 10; // Sát thương của viên đạn
     public GameObject hitEffect; // Prefab của hiệu ứng va chạm
 
     void Start()

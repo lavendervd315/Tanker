@@ -94,7 +94,7 @@ public class BotScript : MonoBehaviour
         rbBullet.linearVelocity = firePoint.up * bulletSpeed;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         health -= damage;
 
