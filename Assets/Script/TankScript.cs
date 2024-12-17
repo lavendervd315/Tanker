@@ -11,7 +11,7 @@ public class TankScript : MonoBehaviour
     public float maxHealth = 100f; // Máu tối đa
     public Slider healthBar; // Tham chiếu đến thanh máu (Slider)
 
-    private float currentHealth;
+    private float currentHealth = 100f;
 
     private Rigidbody2D rb; // Rigidbody2D của tank
     private Vector2 movement; // Vector lưu hướng di chuyển
@@ -49,7 +49,7 @@ public class TankScript : MonoBehaviour
 
 
         // Bắn đạn khi nhấn phím Chuột trái
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) 
         {
             Shoot();
         }
@@ -71,12 +71,11 @@ public class TankScript : MonoBehaviour
         rbBullet.linearVelocity = firePoint.up * bulletSpeed;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         currentHealth -= damage;
 
-        // Đảm bảo máu không dưới 0
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+        Debug.Log("currentHealth=" + currentHealth);
 
         UpdateHealthBar();
 

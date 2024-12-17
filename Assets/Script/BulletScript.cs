@@ -8,7 +8,7 @@ public class BulletScript : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -32,7 +32,7 @@ public class BulletScript : MonoBehaviour
                 Instantiate(hitEffect, transform.position, Quaternion.identity);
             }
 
-            
+
         }
 
         if (other.CompareTag("Tanker"))

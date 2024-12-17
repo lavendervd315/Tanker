@@ -2,7 +2,7 @@
 
 public class BotScript : MonoBehaviour
 {
-    
+
     public GameObject bulletPrefab; // Prefab của viên đạn
     private GameController gameController;
     private GameObject tanker; // Tham chiếu đến người chơi
