@@ -32,7 +32,8 @@ public class BulletScript : MonoBehaviour
                 Instantiate(hitEffect, transform.position, Quaternion.identity);
             }
 
-
+            // Hủy viên đạn sau khi chạm
+            Destroy(gameObject);
         }
 
         if (other.CompareTag("Tanker"))
@@ -43,9 +44,16 @@ public class BulletScript : MonoBehaviour
             {
                 tank.TakeDamage(damage);
             }
+            // Hủy viên đạn sau khi chạm
+            Destroy(gameObject);
         }
 
-        // Hủy viên đạn sau khi chạm
-        Destroy(gameObject);
+        if (other.CompareTag("Wall"))
+        {
+            Debug.Log("Bullet hit Wall!");
+
+            // Hủy viên đạn sau khi chạm
+            Destroy(gameObject);
+        }
     }
 }

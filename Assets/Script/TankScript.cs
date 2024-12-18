@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 public class TankScript : MonoBehaviour
 {
     public GameObject tanker; // Tank
     public GameObject bulletPrefab; // Prefab của viên đạn
+    public GameObject rocketPrefab; // Prefab của viên đạn
     public Transform firePoint; // Điểm xuất phát của viên đạn
     public float bulletSpeed = 100f; // Tốc độ của viên đạn
     public float moveSpeed = 10f; // Tốc độ di chuyển của tank
@@ -63,12 +65,65 @@ public class TankScript : MonoBehaviour
 
     void Shoot()
     {
-        // Tạo viên đạn mới tại vị trí firePoint
-        GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        // Tạo viên đạn chính giữa
+        GameObject bulletCenter = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+        Rigidbody2D rbCenter = bulletCenter.GetComponent<Rigidbody2D>();
+        rbCenter.linearVelocity = firePoint.up * bulletSpeed;
 
-        // Lấy Rigidbody2D của viên đạn và thêm lực để nó di chuyển
-        Rigidbody2D rbBullet = bullet.GetComponent<Rigidbody2D>();
-        rbBullet.linearVelocity = firePoint.up * bulletSpeed;
+        // Tạo viên đạn song song (bên phải)
+        Vector3 offsetRight = firePoint.right * 0.5f; // Khoảng cách song song (dịch sang phải)
+        GameObject bulletssRight = Instantiate(bulletPrefab, firePoint.position + offsetRight, firePoint.rotation);
+        Rigidbody2D rbssRight = bulletssRight.GetComponent<Rigidbody2D>();
+        rbssRight.linearVelocity = firePoint.up * bulletSpeed;
+
+        // Tạo viên đạn song song (bên trái)
+        Vector3 offsetLeft = -firePoint.right * 0.5f; // Khoảng cách song song (dịch sang trái)
+        GameObject bulletssLeft = Instantiate(bulletPrefab, firePoint.position + offsetLeft, firePoint.rotation);
+        Rigidbody2D rbssLeft = bulletssLeft.GetComponent<Rigidbody2D>();
+        rbssLeft.linearVelocity = firePoint.up * bulletSpeed;
+
+        // Tạo viên đạn chéo bên trái
+        GameObject bulletLeft = Instantiate(bulletPrefab, firePoint.position, Quaternion.Euler(0, 0, firePoint.rotation.eulerAngles.z + 30));
+        Rigidbody2D rbLeft = bulletLeft.GetComponent<Rigidbody2D>();
+        rbLeft.linearVelocity = bulletLeft.transform.up * bulletSpeed;
+
+        // Tạo viên đạn chéo bên phải
+        GameObject bulletRight = Instantiate(bulletPrefab, firePoint.position, Quaternion.Euler(0, 0, firePoint.rotation.eulerAngles.z - 30));
+        Rigidbody2D rbRight = bulletRight.GetComponent<Rigidbody2D>();
+        rbRight.linearVelocity = bulletRight.transform.up * bulletSpeed;
+
+        // Tạo tên lửa đuổi
+        GameObject rocket = Instantiate(rocketPrefab, firePoint.position, firePoint.rotation);
+
+        // Gán mục tiêu cho tên lửa
+        BotScript botScript = FindNearestBot(); // Tìm bot gần nhất
+        if (botScript != null)
+        {
+            RocketScript rocketScript = rocket.GetComponent<RocketScript>();
+            if (rocketScript != null)
+            {
+                rocketScript.target = botScript.transform; // Gán mục tiêu là đối tượng có BotScript
+            }
+        }
+    }
+
+    BotScript FindNearestBot()
+    {
+        BotScript[] bots = FindObjectsOfType<BotScript>(); // Lấy tất cả BotScript trong cảnh
+        BotScript nearestBot = null;
+        float minDistance = Mathf.Infinity;
+
+        foreach (BotScript bot in bots)
+        {
+            float distance = Vector2.Distance(transform.position, bot.transform.position);
+            if (distance < minDistance)
+            {
+                minDistance = distance;
+                nearestBot = bot;
+            }
+        }
+
+        return nearestBot;
     }
 
     public void TakeDamage(float damage)
