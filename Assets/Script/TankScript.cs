@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
@@ -12,16 +13,25 @@ public class TankScript : MonoBehaviour
     public float moveSpeed = 10f; // Tốc độ di chuyển của tank
     public float maxHealth = 100f; // Máu tối đa
     public Slider healthBar; // Tham chiếu đến thanh máu (Slider)
+    public AudioClip shootSound; // Âm thanh khi bắn đạn
 
     private float currentHealth = 100f;
-
     private Rigidbody2D rb; // Rigidbody2D của tank
     private Vector2 movement; // Vector lưu hướng di chuyển
+    private AudioSource audioSource; // Nguồn phát âm thanh
+    public VariableJoystick variableJoystick;
 
     void Start()
     {
         // Lấy Rigidbody2D từ tanker
         rb = tanker.GetComponent<Rigidbody2D>();
+
+        // Thêm hoặc lấy AudioSource
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
     }
 
     void Update()
@@ -30,8 +40,15 @@ public class TankScript : MonoBehaviour
         float moveX = Input.GetAxisRaw("Horizontal"); // Trái/Phải
         float moveY = Input.GetAxisRaw("Vertical");   // Lên/Xuống
 
-        // Tạo vector di chuyển
-        movement = new Vector2(moveX, moveY).normalized;
+        // Gộp input từ joystick và bàn phím
+        float joystickX = variableJoystick.Horizontal;
+        float joystickY = variableJoystick.Vertical;
+
+        // Ưu tiên joystick, nếu không có thì dùng bàn phím
+        movement = new Vector2(
+            joystickX != 0 ? joystickX : moveX,
+            joystickY != 0 ? joystickY : moveY
+        ).normalized;
 
         // Xoay tank theo hướng di chuyển
         if (movement != Vector2.zero)
@@ -45,17 +62,25 @@ public class TankScript : MonoBehaviour
             // Tính toán góc quay ngắn nhất
             float angleDifference = Mathf.DeltaAngle(currentAngle, targetAngle);
 
-            // Quay tank theo góc quay ngắn nhất
-            tanker.transform.Rotate(0, 0, angleDifference);
+            // Quay mượt mà về hướng targetAngle với giới hạn tốc độ quay
+            float smoothedAngle = Mathf.LerpAngle(currentAngle, targetAngle, Time.deltaTime * 10f);
+
+            // Đảm bảo góc quay không quá 1 vòng (360 độ)
+            if (Mathf.Abs(angleDifference) > 180f)
+            {
+                smoothedAngle = (smoothedAngle + 180f) % 360f;
+            }
+
+            tanker.transform.rotation = Quaternion.Euler(0, 0, smoothedAngle);
         }
 
-
-        // Bắn đạn khi nhấn phím Chuột trái
-        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0)) 
+        // Bắn đạn khi nhấn phím Chuột trái hoặc Space
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             Shoot();
         }
     }
+
 
     void FixedUpdate()
     {
@@ -65,45 +90,65 @@ public class TankScript : MonoBehaviour
 
     void Shoot()
     {
+        // Phát âm thanh bắn đạn
+        if (shootSound != null)
+        {
+            audioSource.PlayOneShot(shootSound);
+        }
+
+
         // Tạo viên đạn chính giữa
         GameObject bulletCenter = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rbCenter = bulletCenter.GetComponent<Rigidbody2D>();
-        rbCenter.linearVelocity = firePoint.up * bulletSpeed;
+        SetupBullet(bulletCenter);
 
         // Tạo viên đạn song song (bên phải)
         Vector3 offsetRight = firePoint.right * 0.5f; // Khoảng cách song song (dịch sang phải)
         GameObject bulletssRight = Instantiate(bulletPrefab, firePoint.position + offsetRight, firePoint.rotation);
         Rigidbody2D rbssRight = bulletssRight.GetComponent<Rigidbody2D>();
-        rbssRight.linearVelocity = firePoint.up * bulletSpeed;
+        SetupBullet(bulletssRight);
 
         // Tạo viên đạn song song (bên trái)
         Vector3 offsetLeft = -firePoint.right * 0.5f; // Khoảng cách song song (dịch sang trái)
         GameObject bulletssLeft = Instantiate(bulletPrefab, firePoint.position + offsetLeft, firePoint.rotation);
         Rigidbody2D rbssLeft = bulletssLeft.GetComponent<Rigidbody2D>();
-        rbssLeft.linearVelocity = firePoint.up * bulletSpeed;
+        SetupBullet(bulletssLeft);
 
-        // Tạo viên đạn chéo bên trái
-        GameObject bulletLeft = Instantiate(bulletPrefab, firePoint.position, Quaternion.Euler(0, 0, firePoint.rotation.eulerAngles.z + 30));
-        Rigidbody2D rbLeft = bulletLeft.GetComponent<Rigidbody2D>();
-        rbLeft.linearVelocity = bulletLeft.transform.up * bulletSpeed;
+        //// Tạo viên đạn chéo bên trái
+        //GameObject bulletLeft = Instantiate(bulletPrefab, firePoint.position, Quaternion.Euler(0, 0, firePoint.rotation.eulerAngles.z + 30));
+        //Rigidbody2D rbLeft = bulletLeft.GetComponent<Rigidbody2D>();
+        //rbLeft.linearVelocity = bulletLeft.transform.up * bulletSpeed;
 
-        // Tạo viên đạn chéo bên phải
-        GameObject bulletRight = Instantiate(bulletPrefab, firePoint.position, Quaternion.Euler(0, 0, firePoint.rotation.eulerAngles.z - 30));
-        Rigidbody2D rbRight = bulletRight.GetComponent<Rigidbody2D>();
-        rbRight.linearVelocity = bulletRight.transform.up * bulletSpeed;
+        //// Tạo viên đạn chéo bên phải
+        //GameObject bulletRight = Instantiate(bulletPrefab, firePoint.position, Quaternion.Euler(0, 0, firePoint.rotation.eulerAngles.z - 30));
+        //Rigidbody2D rbRight = bulletRight.GetComponent<Rigidbody2D>();
+        //rbRight.linearVelocity = bulletRight.transform.up * bulletSpeed;
 
         // Tạo tên lửa đuổi
-        GameObject rocket = Instantiate(rocketPrefab, firePoint.position, firePoint.rotation);
+        //GameObject rocket = Instantiate(rocketPrefab, firePoint.position, firePoint.rotation);
 
-        // Gán mục tiêu cho tên lửa
-        BotScript botScript = FindNearestBot(); // Tìm bot gần nhất
-        if (botScript != null)
+        //// Gán mục tiêu cho tên lửa
+        //BotScript botScript = FindNearestBot(); // Tìm bot gần nhất
+        //if (botScript != null)
+        //{
+        //    RocketScript rocketScript = rocket.GetComponent<RocketScript>();
+        //    if (rocketScript != null)
+        //    {
+        //        rocketScript.target = botScript.transform; // Gán mục tiêu là đối tượng có BotScript
+        //    }
+        //}
+    }
+
+    void SetupBullet(GameObject bullet)
+    {
+        // Ngăn viên đạn va chạm với tank
+        Physics2D.IgnoreCollision(bullet.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+
+        // Thiết lập vận tốc cho viên đạn
+        Rigidbody2D rb = bullet.GetComponent<Rigidbody2D>();
+        if (rb != null)
         {
-            RocketScript rocketScript = rocket.GetComponent<RocketScript>();
-            if (rocketScript != null)
-            {
-                rocketScript.target = botScript.transform; // Gán mục tiêu là đối tượng có BotScript
-            }
+            rb.linearVelocity = firePoint.up * bulletSpeed;
         }
     }
 

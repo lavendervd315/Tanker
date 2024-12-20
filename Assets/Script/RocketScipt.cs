@@ -32,7 +32,7 @@ public class RocketScript : MonoBehaviour
         transform.Translate(Vector2.up * speed * Time.deltaTime);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Bot"))
         {
@@ -51,6 +51,14 @@ public class RocketScript : MonoBehaviour
                 // Tạo hiệu ứng tại vị trí va chạm
                 Instantiate(hitEffect, transform.position, Quaternion.identity);
             }
+
+            // Hủy viên đạn sau khi chạm
+            Destroy(gameObject);
+        }
+
+        if (collision.CompareTag("Wall"))
+        {
+            Debug.Log("Rocket hit Wall!");
 
             // Hủy viên đạn sau khi chạm
             Destroy(gameObject);

@@ -28,10 +28,9 @@ public class GameController : MonoBehaviour
     public void OnBotDestroyed()
     {
         currentBotCount--;
-        if (currentBotCount <= 1)
+        if (currentBotCount <= 0)
         {
             // Spawn bot mới khi bot hiện tại bị tiêu diệt
-            SpawnBot();
             SpawnBot();
         }
     }

@@ -11,15 +11,15 @@ public class BulletScript : MonoBehaviour
 
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    void OnTriggerEnter2D(Collider2D collision)
     {
         // Kiểm tra nếu viên đạn chạm vào kẻ địch
-        if (other.CompareTag("Bot"))
+        if (collision.CompareTag("Bot"))
         {
             Debug.Log("Bullet hit Bot!");
 
             // Gây sát thương cho kẻ địch
-            BotScript bot = other.GetComponent<BotScript>();
+            BotScript bot = collision.GetComponent<BotScript>();
             if (bot != null)
             {
                 bot.TakeDamage(damage);
@@ -36,10 +36,10 @@ public class BulletScript : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (other.CompareTag("Tanker"))
+        if (collision.CompareTag("Tanker"))
         {
             Debug.Log("Bullet hit Tank!");
-            TankScript tank = other.GetComponent<TankScript>();
+            TankScript tank = collision.GetComponent<TankScript>();
             if (tank != null)
             {
                 tank.TakeDamage(damage);
@@ -48,7 +48,7 @@ public class BulletScript : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (other.CompareTag("Wall"))
+        if (collision.CompareTag("Wall"))
         {
             Debug.Log("Bullet hit Wall!");
 
