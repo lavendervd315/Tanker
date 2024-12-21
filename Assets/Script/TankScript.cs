@@ -96,7 +96,6 @@ public class TankScript : MonoBehaviour
             audioSource.PlayOneShot(shootSound);
         }
 
-
         // Tạo viên đạn chính giữa
         GameObject bulletCenter = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
         Rigidbody2D rbCenter = bulletCenter.GetComponent<Rigidbody2D>();
@@ -115,28 +114,28 @@ public class TankScript : MonoBehaviour
         SetupBullet(bulletssLeft);
 
         //// Tạo viên đạn chéo bên trái
-        //GameObject bulletLeft = Instantiate(bulletPrefab, firePoint.position, Quaternion.Euler(0, 0, firePoint.rotation.eulerAngles.z + 30));
-        //Rigidbody2D rbLeft = bulletLeft.GetComponent<Rigidbody2D>();
-        //rbLeft.linearVelocity = bulletLeft.transform.up * bulletSpeed;
+        GameObject bulletLeft = Instantiate(bulletPrefab, firePoint.position, Quaternion.Euler(0, 0, firePoint.rotation.eulerAngles.z + 30));
+        Rigidbody2D rbLeft = bulletLeft.GetComponent<Rigidbody2D>();
+        rbLeft.linearVelocity = bulletLeft.transform.up * bulletSpeed;
 
-        //// Tạo viên đạn chéo bên phải
-        //GameObject bulletRight = Instantiate(bulletPrefab, firePoint.position, Quaternion.Euler(0, 0, firePoint.rotation.eulerAngles.z - 30));
-        //Rigidbody2D rbRight = bulletRight.GetComponent<Rigidbody2D>();
-        //rbRight.linearVelocity = bulletRight.transform.up * bulletSpeed;
+        // Tạo viên đạn chéo bên phải
+        GameObject bulletRight = Instantiate(bulletPrefab, firePoint.position, Quaternion.Euler(0, 0, firePoint.rotation.eulerAngles.z - 30));
+        Rigidbody2D rbRight = bulletRight.GetComponent<Rigidbody2D>();
+        rbRight.linearVelocity = bulletRight.transform.up * bulletSpeed;
 
         // Tạo tên lửa đuổi
-        //GameObject rocket = Instantiate(rocketPrefab, firePoint.position, firePoint.rotation);
+        GameObject rocket = Instantiate(rocketPrefab, firePoint.position, firePoint.rotation);
 
-        //// Gán mục tiêu cho tên lửa
-        //BotScript botScript = FindNearestBot(); // Tìm bot gần nhất
-        //if (botScript != null)
-        //{
-        //    RocketScript rocketScript = rocket.GetComponent<RocketScript>();
-        //    if (rocketScript != null)
-        //    {
-        //        rocketScript.target = botScript.transform; // Gán mục tiêu là đối tượng có BotScript
-        //    }
-        //}
+        // Gán mục tiêu cho tên lửa
+        BotScript botScript = FindNearestBot(); // Tìm bot gần nhất
+        if (botScript != null)
+        {
+            RocketScript rocketScript = rocket.GetComponent<RocketScript>();
+            if (rocketScript != null)
+            {
+                rocketScript.target = botScript.transform; // Gán mục tiêu là đối tượng có BotScript
+            }
+        }
     }
 
     void SetupBullet(GameObject bullet)
