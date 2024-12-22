@@ -153,7 +153,8 @@ public class TankScript : MonoBehaviour
 
     BotScript FindNearestBot()
     {
-        BotScript[] bots = FindObjectsOfType<BotScript>(); // Lấy tất cả BotScript trong cảnh
+
+        BotScript[] bots = FindObjectsByType<BotScript>(FindObjectsSortMode.None);
         BotScript nearestBot = null;
         float minDistance = Mathf.Infinity;
 
