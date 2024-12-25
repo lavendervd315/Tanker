@@ -2,36 +2,39 @@
 
 public class CameraBoundaries : MonoBehaviour
 {
-    public Camera mainCamera; // Camera chính
-    public GameObject topWall, bottomWall, leftWall, rightWall; // Các tường trên, dưới, trái, phải
-    public float wallThickness = 0.5f; // Độ dày của các bức tường
+    public Camera mainCamera; // Gán camera chính ở đây
+
+    private float cameraHeight;
+    private float cameraWidth;
 
     void Start()
     {
-        CreateWalls();
+        // Lấy kích thước camera
+        if (mainCamera == null)
+        {
+            mainCamera = Camera.main;
+        }
+
+        cameraHeight = mainCamera.orthographicSize;
+        cameraWidth = cameraHeight * mainCamera.aspect;
     }
 
-    void CreateWalls()
+    void Update()
     {
-        // Tính toán chiều cao và chiều rộng màn hình từ camera
-        float screenHeight = mainCamera.orthographicSize * 2; // Chiều cao màn hình (theo đơn vị thế giới)
-        float screenWidth = screenHeight * mainCamera.aspect; // Chiều rộng màn hình (theo đơn vị thế giới)
+        // Lấy vị trí hiện tại của vật thể
+        Vector3 position = transform.position;
 
-        // Đặt các tường vào đúng vị trí và kích thước
-        // Tường trên (Top Wall)
-        topWall.transform.position = new Vector3(0, mainCamera.transform.position.y + mainCamera.orthographicSize + wallThickness / 2, 0);
-        topWall.transform.localScale = new Vector3(screenWidth, wallThickness, 1);
+        // Tính toán giới hạn của camera
+        float leftBound = mainCamera.transform.position.x - cameraWidth;
+        float rightBound = mainCamera.transform.position.x + cameraWidth;
+        float topBound = mainCamera.transform.position.y + cameraHeight;
+        float bottomBound = mainCamera.transform.position.y - cameraHeight;
 
-        // Tường dưới (Bottom Wall)
-        bottomWall.transform.position = new Vector3(0, mainCamera.transform.position.y - mainCamera.orthographicSize - wallThickness / 2, 0);
-        bottomWall.transform.localScale = new Vector3(screenWidth, wallThickness, 1);
+        // Giới hạn vị trí của vật thể
+        position.x = Mathf.Clamp(position.x, leftBound, rightBound);
+        position.y = Mathf.Clamp(position.y, bottomBound, topBound);
 
-        // Tường trái (Left Wall)
-        leftWall.transform.position = new Vector3(mainCamera.transform.position.x - screenWidth / 2 - wallThickness / 2, 0, 0);
-        leftWall.transform.localScale = new Vector3(wallThickness, screenHeight, 1);
-
-        // Tường phải (Right Wall)
-        rightWall.transform.position = new Vector3(mainCamera.transform.position.x + screenWidth / 2 + wallThickness / 2, 0, 0);
-        rightWall.transform.localScale = new Vector3(wallThickness, screenHeight, 1);
+        // Cập nhật vị trí của vật thể
+        transform.position = position;
     }
 }

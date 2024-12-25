@@ -11,11 +11,12 @@ public class TankScript : MonoBehaviour
     public Transform firePoint; // Điểm xuất phát của viên đạn
     public float bulletSpeed = 100f; // Tốc độ của viên đạn
     public float moveSpeed = 10f; // Tốc độ di chuyển của tank
-    public float maxHealth = 100f; // Máu tối đa
-    public Slider healthBar; // Tham chiếu đến thanh máu (Slider)
     public AudioClip shootSound; // Âm thanh khi bắn đạn
 
+    public Slider healthBar; // Tham chiếu đến thanh máu (Slider)
+    public float maxHealth = 100f; // Máu tối đa
     private float currentHealth = 100f;
+
     private Rigidbody2D rb; // Rigidbody2D của tank
     private Vector2 movement; // Vector lưu hướng di chuyển
     private AudioSource audioSource; // Nguồn phát âm thanh
@@ -189,7 +190,7 @@ public class TankScript : MonoBehaviour
     {
         if (healthBar != null)
         {
-            healthBar.value = currentHealth / maxHealth; // Giá trị từ 0 đến 1
+            healthBar.value = currentHealth / maxHealth;
         }
     }
 }
